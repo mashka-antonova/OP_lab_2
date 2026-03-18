@@ -7,4 +7,10 @@ typedef struct Iterator {
     LinkedNode* current;
 } Iterator;
 
+Iterator begin(LinkedList* list);
+int hasNext(const Iterator* it);
+void next(Iterator* it);
+DemographicRecord* get(const Iterator* it);
+DemographicRecord* getNext(const Iterator* it);
+
 #endif // ITERATOR_H

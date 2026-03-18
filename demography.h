@@ -1,5 +1,5 @@
-#ifndef DEMOGRAPHY_C
-#define DEMOGRAPHY_C
+#ifndef DEMOGRAPHY_H
+#define DEMOGRAPHY_H
 
 #define MAX_REGION_NAME 128
 
@@ -15,4 +15,4 @@ typedef struct {
 
 } DemographicRecord;
 
-#endif // DEMOGRAPHY_C
+#endif // DEMOGRAPHY_H
