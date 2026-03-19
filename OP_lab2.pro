@@ -11,15 +11,22 @@ CONFIG += c++17
 SOURCES += \
     iterator.c \
     list.c \
+    load_file_data.c \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    metrix.c \
+    parser.c
 
 HEADERS += \
+    appcontext.h \
     demography.h \
     entrypoint.h \
     iterator.h \
     list.h \
-    mainwindow.h
+    load_file_data.h \
+    mainwindow.h \
+    metrix.h \
+    parser.h
 
 FORMS += \
     mainwindow.ui

@@ -74,3 +74,21 @@ int insertSort(LinkedList* list, DemographicRecord record) {
   }
   return isCorrect;
 }
+
+void disposeList(LinkedList* list) {
+  if (list != NULL) {
+    LinkedNode* current = list->head;
+    LinkedNode* nextNode = NULL;
+
+    while (current != NULL) {
+      nextNode = current->next;
+      free(current);
+      current = nextNode;
+    }
+
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
+    free(list);
+  }
+}
