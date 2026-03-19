@@ -2,10 +2,11 @@
 #include "iterator.h"
 #include <stdlib.h>
 #include <string.h>
+#include "appcontext.h"
 
-double getValueByColumn(DemographicRecord* record, int columnIndex) {
+double getValueByColumn(DemographicRecord* record, int column) {
   double value = 0;
-  switch (columnIndex) {
+  switch (column) {
     case 1: value = record->year;
       break;
     case 3: value = record->natural_population_growth;
@@ -45,11 +46,11 @@ int countRegionRecords(Iterator* it, const char* region) {
   return count;
 }
 
-double* getSortedColumnValues(Iterator* startIt, int count, int columnIndex) {
+double* getSortedColumnValues(Iterator* startIt, int count, int column) {
   double* values = (double*)malloc(count * sizeof(double));
   if (values != NULL) {
     for (int i = 0; i < count; i++) {
-      values[i] = getValueByColumn(get(startIt), columnIndex);
+      values[i] = getValueByColumn(get(startIt), column);
       next(startIt);
     }
     qsort(values, count, sizeof(double), compareDoubles);
@@ -57,7 +58,7 @@ double* getSortedColumnValues(Iterator* startIt, int count, int columnIndex) {
   return values;
 }
 
-Metrix calculateMetrix(AppContext* context, const char* region, int columnIndex) {
+Metrix calculateMetrix(AppContext* context, const char* region, int column) {
   Metrix metrix = {0, 0, 0, 0};
   if (context != NULL && context->list->head != NULL && region != NULL) {
 
@@ -67,7 +68,7 @@ Metrix calculateMetrix(AppContext* context, const char* region, int columnIndex)
     int count = countRegionRecords(&it, region);
 
     if (count > 0) {
-      double* values = getSortedColumnValues(&startIt, count, columnIndex);
+      double* values = getSortedColumnValues(&startIt, count, column);
       if (values != NULL) {
         metrix.min = values[0];
         metrix.max = values[count - 1];

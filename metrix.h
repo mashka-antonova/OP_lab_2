@@ -1,7 +1,7 @@
 #ifndef METRIX_H
 #define METRIX_H
 
-#include "appcontext.h"
+typedef struct AppContext AppContext;
 
 typedef struct {
     double min;

@@ -1,5 +1,5 @@
 #include "load_file_data.h"
-#include "appcontext.h"
+#include "parser.h"
 #include <stdio.h>
 
 void processLines(AppContext* context, FILE* file) {
@@ -14,7 +14,7 @@ void processLines(AppContext* context, FILE* file) {
     }
 }
 
-int loadDemographyData(AppContext* context, char* fileName) {
+int loadDemographyData(AppContext* context, const char* fileName) {
   int isCorrect = 0;
   char buffer[MAX_BUFFER_SIZE];
 

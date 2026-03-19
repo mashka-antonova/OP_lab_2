@@ -2,14 +2,25 @@
 #define APPCONTEXT_H
 
 #include "list.h"
+#include "metrix.h"
 
-#define MAX_ERROR_MSG 256
+typedef enum {
+    STATUS_OK,
+    ERR_FILE_OPEN,
+    ERR_INVALID_HEADER,
+    ERR_MALLOC_FAILED,
+    ERR_EMPTY_DATA,
+    ERR_INVALID_REGION,
+    ERR_INVALID_COLUMN,
+    ERR_INTERNAL,
+} Status;
 
-typedef struct {
+typedef struct AppContext {
     LinkedList* list;
     int totalRows;
     int errorRows;
-    char lastError[MAX_ERROR_MSG];
+    Status programmStatus;
+    Metrix metrix;
 } AppContext;
 
 #endif // APPCONTEXT_H
