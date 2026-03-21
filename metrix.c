@@ -60,7 +60,7 @@ double* getSortedColumnValues(Iterator* startIt, int count, int column) {
 
 Metrix calculateMetrix(AppContext* context, const char* region, int column) {
   Metrix metrix = {0, 0, 0, 0};
-  if (context != NULL && context->list->head != NULL && region != NULL) {
+  if (context != NULL && context->list != NULL && context->list->head != NULL && region != NULL) {
 
     Iterator it = begin(context->list);
     startRegionIterator(&it, region);

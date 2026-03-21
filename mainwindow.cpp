@@ -100,6 +100,10 @@ void MainWindow::on_loadData_clicked()
 
 void MainWindow::updateTable(const QString& region) {
     ui->tableWidget->setRowCount(0);
+
+    if (context.list == nullptr)
+        return;
+
     bool isRegionFound = false;
     bool isRegionEmpty = region.isEmpty();
 

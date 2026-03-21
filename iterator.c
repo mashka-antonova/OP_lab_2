@@ -5,7 +5,7 @@ Iterator begin(LinkedList* list) {
   Iterator it;
   it.current = NULL;
 
-  if (list->head != NULL)
+  if (list != NULL && list->head != NULL)
     it.current = list->head;
 
   return it;
