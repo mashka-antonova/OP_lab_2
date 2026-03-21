@@ -133,12 +133,34 @@ void MainWindow::updateTable(const QString& region) {
 
 void MainWindow::on_regionInput_editingFinished()
 {
-
+    updateTable(ui->regionInput->text().trimmed());
 }
 
 void MainWindow::on_calculateMetrix_clicked()
 {
+    std::string str = ui->regionInput->text().trimmed().toStdString();
+    const char* cStr = str.c_str();
+    int column = ui->columnInput->value();
 
+    if (str.empty())
+        ui->outputErrorLabel->setText("Empty region. To calculate metrix need region");
+    else {
+        AppParams params;
+        params.region = cStr;
+        params.column = column;
+        doOperation(CALCULATE_METRICS, &context, &params);
+        showError();
+
+        if (context.metrix.count > 0) {
+            ui->minimum->setText(QString::number(context.metrix.min));
+            ui->maximum->setText(QString::number(context.metrix.max));
+            ui->mediana->setText(QString::number(context.metrix.mediana));
+        } else {
+            ui->minimum->clear();
+            ui->maximum->clear();
+            ui->mediana->clear();
+        }
+    }
 }
 
 
