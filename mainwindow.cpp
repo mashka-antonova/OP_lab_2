@@ -1,14 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-extern "C" {
-#include "appcontext.h"
-#include "entrypoint.h"
-#include "iterator.h"
-#include "list.h"
-}
-
 #include <QFileDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -81,17 +75,66 @@ void MainWindow::on_selectFile_clicked()
         context.programmStatus = ERR_EMPTY_DATA;
 }
 
+void MainWindow::on_loadData_clicked()
+{
+    std::string str = ui->filePath->text().toStdString();
+    const char* cStr = str.c_str();
+
+    if (str.empty())
+        ui->outputErrorLabel->setText("File not uploaded");
+    else {
+        AppParams params;
+        params.fileName = cStr;
+
+        doOperation(LOAD_DATA, &context, &params);
+        showError();
+        int successRows = context.totalRows - context.errorRows;
+        QMessageBox::information(this, "Результат загрузки",
+                                 QString("Всего строк: %1\nУспешно считано: %2\nСтрок с ошибками: %3")
+                                     .arg(context.totalRows)
+                                     .arg(successRows)
+                                     .arg(context.errorRows));
+        updateTable(ui->regionInput->text().trimmed());
+    }
+}
+
+void MainWindow::updateTable(const QString& region) {
+    ui->tableWidget->setRowCount(0);
+    bool isRegionFound = false;
+    bool isRegionEmpty = region.isEmpty();
+
+    Iterator it = begin(context.list);
+    int row = 0;
+    while (hasNext(&it)) {
+        DemographicRecord* record = get(&it);
+        QString recordRegion = QString::fromUtf8(record->region);
+
+        if (isRegionEmpty || recordRegion.compare(region, Qt::CaseInsensitive) == 0) {
+            if (!isRegionEmpty)
+                isRegionFound = true;
+            ui->tableWidget->insertRow(row);
+            ui->tableWidget->setItem(row, 0, new QTableWidgetItem(QString::number(record->year)));
+            ui->tableWidget->setItem(row, 1, new QTableWidgetItem(recordRegion));
+            ui->tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(record->natural_population_growth)));
+            ui->tableWidget->setItem(row, 3, new QTableWidgetItem(QString::number(record->birth_rate)));
+            ui->tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(record->death_rate)));
+            ui->tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(record->general_demographic_weight)));
+            ui->tableWidget->setItem(row, 6, new QTableWidgetItem(QString::number(record->urbanization)));
+            row++;
+        }
+        next(&it);
+    }
+    if (!isRegionEmpty && !isRegionFound)
+        ui->regionErrorLabel->setText("This region does not exist");
+    else
+        ui->regionErrorLabel->clear();
+}
+
 
 void MainWindow::on_regionInput_editingFinished()
 {
 
 }
-
-void MainWindow::on_loadData_clicked()
-{
-
-}
-
 
 void MainWindow::on_calculateMetrix_clicked()
 {

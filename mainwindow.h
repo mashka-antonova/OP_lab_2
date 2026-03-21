@@ -1,8 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+extern "C" {
 #include "appcontext.h"
+#include "entrypoint.h"
+#include "iterator.h""
+}
+
+#include <QMainWindow>
 
 #define COLUMN_COUNT 7
 
@@ -22,12 +27,8 @@ public:
 
 private slots:
     void on_selectFile_clicked();
-
     void on_loadData_clicked();
-
     void on_calculateMetrix_clicked();
-
-
     void on_regionInput_editingFinished();
 
 private:
@@ -36,6 +37,7 @@ private:
 
     QString errorText(Status error);
     void showError();
+    void updateTable(const QString& region);
 
 };
 
