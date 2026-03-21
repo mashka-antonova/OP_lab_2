@@ -12,7 +12,6 @@ typedef enum {
     ERR_EMPTY_DATA,
     ERR_INVALID_REGION,
     ERR_INVALID_COLUMN,
-    ERR_INTERNAL,
 } Status;
 
 typedef struct AppContext {
