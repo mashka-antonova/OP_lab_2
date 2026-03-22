@@ -6,13 +6,12 @@ int validateHeader(const char* headerLine) {
   int isCorrect = 0;
 
   if (headerLine != NULL) {
-
     if (strstr(headerLine, "year") != NULL &&
         strstr(headerLine, "region") != NULL &&
-        strstr(headerLine, "natural_population_growth") != NULL &&
+        strstr(headerLine, "npg") != NULL &&
         strstr(headerLine, "birth_rate") != NULL &&
         strstr(headerLine, "death_rate") != NULL &&
-        strstr(headerLine, "general_demographic_weight") != NULL &&
+        strstr(headerLine, "gdw") != NULL &&
         strstr(headerLine, "urbanization") != NULL)
           isCorrect = 1;
   }
@@ -25,8 +24,7 @@ int parseDemographyLine(char* line, DemographicRecord* record) {
   int scannedFields = 0;
 
   if (line != NULL && record != NULL) {
-
-    scannedFields = sscanf(line, "%d , %127[^,] , %lf , %lf , %lf , %lf , %lf",
+    scannedFields = sscanf(line, "%d,%127[^,],%lf,%lf,%lf,%lf,%lf",
       &record->year,
       record->region,
       &record->natural_population_growth,

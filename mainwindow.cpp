@@ -3,12 +3,15 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/icon/photo.png"));
+    this->setWindowTitle("ROBCO: DEMOGRAPHIC MODULE");
 
     context.list = nullptr;
     context.totalRows = 0;
@@ -89,11 +92,42 @@ void MainWindow::on_loadData_clicked()
         doOperation(LOAD_DATA, &context, &params);
         showError();
         int successRows = context.totalRows - context.errorRows;
-        QMessageBox::information(this, "Результат загрузки",
-                                 QString("Всего строк: %1\nУспешно считано: %2\nСтрок с ошибками: %3")
-                                     .arg(context.totalRows)
-                                     .arg(successRows)
-                                     .arg(context.errorRows));
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle("TERMINAL NOTIFICATION");
+        msgBox.setText(QString("FILE ANALYSIS COMPLETE:\n\n"
+                               "TOTAL RECORDS: %1\n"
+                               "SUCCESSFULLY READ: %2\n"
+                               "ERRORS: %3")
+                           .arg(context.totalRows)
+                           .arg(successRows)
+                           .arg(context.errorRows));
+
+        msgBox.setStyleSheet(
+            "QMessageBox {"
+            "   background-color: #000000;"
+            "   border: 2px solid #00FF00;"
+            "}"
+            "QLabel {"
+            "   color: #00FF00;"
+            "   font-family: 'Courier New';"
+            "   font-size: 11pt;"
+            "}"
+            "QPushButton {"
+            "   background-color: #000000;"
+            "   color: #00FF00;"
+            "   border: 1px solid #00FF00;"
+            "   padding: 5px 15px;"
+            "   min-width: 80px;"
+            "   font-family: 'Courier New';"
+            "   font-weight: bold;"
+            "   text-transform: uppercase;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #00FF00;"
+            "   color: #000000;"
+            "}"
+            );
+        msgBox.exec();
         updateTable(ui->regionInput->text().trimmed());
     }
 }
@@ -166,7 +200,6 @@ void MainWindow::on_calculateMetrix_clicked()
         }
     }
 }
-
 
 
 
