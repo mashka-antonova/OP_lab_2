@@ -90,7 +90,7 @@ int insertSort(LinkedList* list, const void* data, int (*cmp)(const void*, const
 }
 
 void disposeList(LinkedList* list) {
-  if (!list){
+  if (list){
     LinkedNode* current = list->head;
     while (current) {
       LinkedNode* next = current->next;
