@@ -1,12 +1,23 @@
 #include "logic.h"
 #include "load_file_data.h"
 #include <stdlib.h>
+#include "demography.h"
+#include <string.h>
+
+int compareRecords(const void* a, const void* b) {
+    const DemographicRecord* recA = (const DemographicRecord*)a;
+    const DemographicRecord* recB = (const DemographicRecord*)b;
+    int res = strcmp(recA->region, recB->region);
+    if (res == 0)
+      res = recA->year - recB->year;
+    return res;
+}
 
 void runLoadDataTask(AppContext* context, const char* fileName) {
   if (context->list != NULL)
     disposeList(context->list);
 
-  context->list = initLinkedList();
+  context->list = initLinkedList(sizeof(DemographicRecord));
   context->totalRows = 0;
   context->errorRows = 0;
   context->programmStatus = STATUS_OK;

@@ -23,10 +23,10 @@ void next(Iterator* it) {
     it->current = it->current->next;
 }
 
-DemographicRecord* get(const Iterator* it) {
-  return (it->current) ? &(it->current->data) : NULL;
+void* get(const Iterator* it) {
+  return (it && it->current) ? it->current->data : NULL;
 }
 
-DemographicRecord* getNext(const Iterator* it) {
-  return (it->current && it->current->next) ? &(it->current->next->data) : NULL;
+void* getNext(const Iterator* it) {
+  return (it && it->current && it->current->next) ? it->current->next->data : NULL;
 }

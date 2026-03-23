@@ -298,7 +298,7 @@ font-family: &quot;Courier New&quot;, monospace;</string>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
-        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+        <item>
          <widget class="QLabel" name="label_3">
           <property name="styleSheet">
            <string notr="true">color: #00FF00;
@@ -308,7 +308,7 @@ font-family: &quot;Courier New&quot;, monospace;
 border-style: dashed</string>
           </property>
           <property name="text">
-           <string>                              Minimum</string>
+           <string>Minimum</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -336,7 +336,7 @@ font-family: &quot;Courier New&quot;, monospace;
 border-style: dashed</string>
           </property>
           <property name="text">
-           <string>                              Mediana</string>
+           <string>                Mediana               </string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -364,7 +364,7 @@ font-family: &quot;Courier New&quot;, monospace;
 border-style: dashed</string>
           </property>
           <property name="text">
-           <string>                              Maximum</string>
+           <string>Maximum</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>

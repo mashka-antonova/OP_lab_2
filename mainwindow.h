@@ -5,6 +5,7 @@ extern "C" {
 #include "appcontext.h"
 #include "entrypoint.h"
 #include "iterator.h"
+#include "demography.h"
 }
 
 #include <QMainWindow>

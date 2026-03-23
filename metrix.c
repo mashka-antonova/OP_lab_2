@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "appcontext.h"
+#include "demography.h"
 
 double getValueByColumn(DemographicRecord* record, int column) {
   double value = 0;
@@ -33,13 +34,13 @@ int compareDoubles(const void* a, const void* b) {
 }
 
 void startRegionIterator(Iterator* it, const char* region) {
-  while (hasNext(it) && strcmp(get(it)->region, region) < 0)
+  while (hasNext(it) && strcmp(((DemographicRecord*)get(it))->region, region) < 0)
     next(it);
 }
 
 int countRegionRecords(Iterator* it, const char* region) {
   int count = 0;
-  while (hasNext(it) && strcmp(get(it)->region, region) == 0) {
+  while (hasNext(it) && strcmp(((DemographicRecord*)get(it))->region, region) == 0) {
     count++;
     next(it);
   }
@@ -50,7 +51,7 @@ double* getSortedColumnValues(Iterator* startIt, int count, int column) {
   double* values = (double*)malloc(count * sizeof(double));
   if (values != NULL) {
     for (int i = 0; i < count; i++) {
-      values[i] = getValueByColumn(get(startIt), column);
+      values[i] = getValueByColumn((DemographicRecord*)get(startIt), column);
       next(startIt);
     }
     qsort(values, count, sizeof(double), compareDoubles);

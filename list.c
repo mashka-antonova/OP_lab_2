@@ -3,15 +3,28 @@
 #include <string.h>
 #include "iterator.h"
 
-LinkedList* initLinkedList() {
+LinkedList* initLinkedList(size_t dataSize) {
 
   LinkedList* list = (LinkedList*)malloc(sizeof(LinkedList));
 
   list->size = 0;
+  list->dataSize = dataSize;
   list->head = NULL;
   list->tail = NULL;
 
   return list;
+}
+
+LinkedNode* createNode(LinkedList* list, const void* data) {
+  LinkedNode* newNode = (LinkedNode*)malloc(sizeof(LinkedNode));
+  if (newNode) {
+    newNode->data = malloc(list->dataSize);
+    if (newNode->data)
+      memcpy(newNode->data, data, list->dataSize);
+    newNode->next = NULL;
+    newNode->prev = NULL;
+  }
+  return newNode;
 }
 
 void insertAtHead(LinkedList* list, LinkedNode* newNode) {
@@ -43,52 +56,48 @@ void insertAfter(LinkedList* list, LinkedNode* prevNode, LinkedNode* newNode) {
   }
 }
 
-int compareRecords(DemographicRecord* a, DemographicRecord* b) {
-    int res = strcmp(a->region, b->region);
-    if (res == 0)
-        res = a->year - b->year;
-
-    return res;
-}
-
-int insertSort(LinkedList* list, DemographicRecord record) {
+int insertSort(LinkedList* list, const void* data, int (*cmp)(const void*, const void*)) {
   int isCorrect = 0;
-  if (list != NULL) {
-    LinkedNode* newNode = (LinkedNode*)malloc(sizeof(LinkedNode));
-    if (newNode != NULL) {
-      newNode->data = record;
-      Iterator it = begin(list);
-      if (!hasNext(&it) || compareRecords(get(&it), &record) >= 0) {
-        insertAtHead(list, newNode);
-        isCorrect = 1;
+  LinkedNode* newNode = NULL;
+
+  if (list && data && cmp && (newNode = createNode(list, data)) && newNode->data) {
+    isCorrect = 1;
+    if (!list->head || cmp(list->head->data, data) >= 0) {
+      newNode->next = list->head;
+      if (list->head)
+        list->head->prev = newNode;
+      else
+        list->tail = newNode;
+      list->head = newNode;
+    } else {
+        LinkedNode* cur = list->head;
+        while (cur->next && cmp(cur->next->data, data) < 0)
+          cur = cur->next;
+
+        newNode->next = cur->next;
+        newNode->prev = cur;
+
+        if (cur->next)
+          cur->next->prev = newNode;
+        else
+          list->tail = newNode;
+        cur->next = newNode;
       }
-      else {
-        while (it.current->next != NULL && compareRecords(getNext(&it), &record) < 0)
-          next(&it);
-        insertAfter(list, it.current, newNode);
-        isCorrect = 1;
-      }
-      if (isCorrect)
-        list->size++;
-    }
+      list->size++;
   }
+
   return isCorrect;
 }
 
 void disposeList(LinkedList* list) {
-  if (list != NULL) {
+  if (!list){
     LinkedNode* current = list->head;
-    LinkedNode* nextNode = NULL;
-
-    while (current != NULL) {
-      nextNode = current->next;
+    while (current) {
+      LinkedNode* next = current->next;
+      free(current->data);
       free(current);
-      current = nextNode;
+      current = next;
     }
-
-    list->head = NULL;
-    list->tail = NULL;
-    list->size = 0;
-    free(list);
   }
+  free(list);
 }

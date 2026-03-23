@@ -1,6 +1,7 @@
 #include "load_file_data.h"
 #include "parser.h"
 #include <stdio.h>
+#include "logic.h"
 
 void processLines(AppContext* context, FILE* file) {
   char buffer[MAX_BUFFER_SIZE];
@@ -8,7 +9,7 @@ void processLines(AppContext* context, FILE* file) {
     DemographicRecord record;
     context->totalRows++;
     if (parseDemographyLine(buffer, &record))
-      insertSort(context->list, record);
+      insertSort(context->list, &record, compareRecords);
     else
       context->errorRows++;
     }

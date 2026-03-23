@@ -144,7 +144,7 @@ void MainWindow::updateTable(const QString& region) {
     Iterator it = begin(context.list);
     int row = 0;
     while (hasNext(&it)) {
-        DemographicRecord* record = get(&it);
+        DemographicRecord* record = (DemographicRecord*)get(&it);
         QString recordRegion = QString::fromUtf8(record->region);
 
         if (isRegionEmpty || recordRegion.compare(region, Qt::CaseInsensitive) == 0) {
