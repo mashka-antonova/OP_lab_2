@@ -9,7 +9,7 @@ typedef enum {
 } Operation;
 
 typedef struct {
-    const char* fileName;
+    const char* fileName; //
     const char* region;
     int column;
 } AppParams;

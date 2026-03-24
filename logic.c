@@ -1,6 +1,5 @@
 #include "logic.h"
 #include "load_file_data.h"
-#include <stdlib.h>
 #include "demography.h"
 #include <string.h>
 

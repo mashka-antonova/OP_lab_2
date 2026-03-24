@@ -23,8 +23,7 @@ typedef struct {
 LinkedList* initLinkedList(size_t dataSize);
 void disposeList(LinkedList* list);
 
-void insertAtHead(LinkedList* list, LinkedNode* newNode);
-void insertAfter(LinkedList* list, LinkedNode* prevNode, LinkedNode* newNode);
+
 int insertSort(LinkedList* list, const void* data, int (*cmp)(const void*, const void*));
 
 

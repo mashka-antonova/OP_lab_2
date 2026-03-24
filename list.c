@@ -1,7 +1,9 @@
 #include "list.h"
 #include <stdlib.h>
 #include <string.h>
-#include "iterator.h"
+
+void insertAtHead(LinkedList* list, LinkedNode* newNode);
+void insertAfter(LinkedList* list, LinkedNode* prevNode, LinkedNode* newNode);
 
 LinkedList* initLinkedList(size_t dataSize) {
 

@@ -4,7 +4,6 @@
 #define MAX_REGION_NAME 128
 
 typedef struct {
-
     int year;
     char region[MAX_REGION_NAME];
     double natural_population_growth;

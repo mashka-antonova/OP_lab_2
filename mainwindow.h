@@ -26,7 +26,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
+private slots: //
     void on_selectFile_clicked();
     void on_loadData_clicked();
     void on_calculateMetrix_clicked();

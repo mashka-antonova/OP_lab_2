@@ -1,5 +1,4 @@
 #include "iterator.h"
-#include <stdlib.h>
 
 Iterator begin(LinkedList* list) {
   Iterator it;

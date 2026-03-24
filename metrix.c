@@ -5,7 +5,7 @@
 #include "appcontext.h"
 #include "demography.h"
 
-double getValueByColumn(DemographicRecord* record, int column) {
+double getValueByColumn(DemographicRecord* record, int column) { //
   double value = 0;
   switch (column) {
     case 1: value = record->year;
@@ -47,7 +47,7 @@ int countRegionRecords(Iterator* it, const char* region) {
   return count;
 }
 
-double* getSortedColumnValues(Iterator* startIt, int count, int column) {
+double* getSortedColumnValues(Iterator* startIt, int count, int column) { //
   double* values = (double*)malloc(count * sizeof(double));
   if (values != NULL) {
     for (int i = 0; i < count; i++) {
@@ -86,7 +86,8 @@ Metrix calculateMetrix(AppContext* context, const char* region, int column) {
         metrix.count = count;
         free(values);
       }
+    } else
+        context->programmStatus = ERR_INVALID_REGION;
     }
-  }
   return metrix;
 }

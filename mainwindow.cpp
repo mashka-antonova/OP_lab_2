@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("ROBCO: DEMOGRAPHIC MODULE");
 
     context.list = nullptr;
-    context.totalRows = 0;
+    context.totalRows = 0; //
     context.errorRows = 0;
     context.programmStatus = STATUS_OK;
 
@@ -86,7 +86,7 @@ void MainWindow::on_loadData_clicked()
     if (str.empty())
         ui->outputErrorLabel->setText("File not uploaded");
     else {
-        AppParams params;
+        AppParams params; //
         params.fileName = cStr;
 
         doOperation(LOAD_DATA, &context, &params);

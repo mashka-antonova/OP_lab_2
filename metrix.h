@@ -7,7 +7,7 @@ typedef struct {
     double min;
     double max;
     double mediana;
-    int count;
+    int count; //
 } Metrix;
 
 Metrix calculateMetrix(AppContext* context, const char* region, int columnIndex);

@@ -16,7 +16,7 @@ typedef enum {
 
 typedef struct AppContext {
     LinkedList* list;
-    int totalRows;
+    int totalRows; //
     int errorRows;
     Status programmStatus;
     Metrix metrix;
