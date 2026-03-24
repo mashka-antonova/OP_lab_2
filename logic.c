@@ -22,7 +22,7 @@ void runLoadDataTask(AppContext* context, const char* fileName) {
     context->programmStatus = ERR_FILE_OPEN;
 }
 
-void runCalculateMetricsTask(AppContext* context, const char* region, int column) {
+void runCalculateMetricsTask(AppContext* context, const char* region, Column column) {
   context->programmStatus = STATUS_OK;
   context->metrix = calculateMetrix(context, region, column);
 }

@@ -59,13 +59,16 @@ double* collectData(AppContext* ctx, const char* region, Column col, int* n, Met
     DemographicRecord* record = (DemographicRecord*)get(&it);
     int cmp = strcmp(record->region, region);
     if (cmp == 0) {
-      if (*n >= cap && !(values = (double*)realloc(values, (cap *= 2) * sizeof(double))))
-        break;
-      values[(*n)++] = getValueByColumn(record, col);
-      updateMinMax(metrix, values[*n - 1], *n);
-    } else if (cmp > 0)
-        break;
-    next(&it);
+      if (*n >= cap) {
+        double* values = (double*)realloc(values, (cap *= 2) * sizeof(double));
+        if (!values)
+          break;
+    }
+    double val = getValueByColumn(record, col);
+    values[*n] = val;
+    updateMinMax(metrix, val, *n);
+    (*n)++;
+    }
   }
   return values;
 }

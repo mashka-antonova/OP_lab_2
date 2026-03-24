@@ -172,13 +172,11 @@ void MainWindow::updateTable(const QString& region) {
         ui->regionErrorLabel->clear();
 }
 
-void MainWindow::calculateMetricsClicked()
-{
+void MainWindow::regionInputEditingFinished() {
     updateTable(ui->regionInput->text().trimmed());
 }
 
-void MainWindow::regionInputEditingFinished()
-{
+void MainWindow::calculateMetricsClicked() {
     std::string str = ui->regionInput->text().trimmed().toStdString();
     const char* cStr = str.c_str();
     Column column = static_cast<Column>(ui->columnInput->value() - 1);
