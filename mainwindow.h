@@ -9,6 +9,7 @@ extern "C" {
 }
 
 #include <QMainWindow>
+#include <QTableWidget>
 
 #define COLUMN_COUNT 7
 
@@ -26,15 +27,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots: //
-    void on_selectFile_clicked();
-    void on_loadData_clicked();
-    void on_calculateMetrix_clicked();
-    void on_regionInput_editingFinished();
-
 private:
     Ui::MainWindow *ui;
     AppContext context;
+
+    void selectFileClicked();
+    void loadDataClicked();
+    void calculateMetricsClicked();
+    void regionInputEditingFinished();
+    void tableItemDoubleClicked(QTableWidgetItem *item);
 
     QString errorText(Status error);
     void showError();

@@ -91,8 +91,8 @@ int insertSort(LinkedList* list, const void* data, int (*cmp)(const void*, const
   return isCorrect;
 }
 
-void disposeList(LinkedList* list) {
-  if (list){
+void clearList(LinkedList* list) {
+  if (list) {
     LinkedNode* current = list->head;
     while (current) {
       LinkedNode* next = current->next;
@@ -100,6 +100,16 @@ void disposeList(LinkedList* list) {
       free(current);
       current = next;
     }
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
   }
-  free(list);
+}
+
+
+void disposeList(LinkedList* list) {
+  if (list) {
+    clearList(list);
+    free(list);
+  }
 }

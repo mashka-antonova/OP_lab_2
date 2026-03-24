@@ -1,6 +1,8 @@
 #ifndef METRIX_H
 #define METRIX_H
 
+#include "demography.h"
+
 typedef struct AppContext AppContext;
 
 typedef struct {
@@ -10,6 +12,6 @@ typedef struct {
     int count; //
 } Metrix;
 
-Metrix calculateMetrix(AppContext* context, const char* region, int columnIndex);
+Metrix calculateMetrix(AppContext* context, const char* region, Column columnIndex);
 
 #endif // METRIX_H

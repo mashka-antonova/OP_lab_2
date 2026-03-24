@@ -2,6 +2,7 @@
 #define ENTRYPOINT_H
 
 #include "appcontext.h"
+#include "demography.h"
 
 typedef enum {
     LOAD_DATA,
@@ -9,9 +10,8 @@ typedef enum {
 } Operation;
 
 typedef struct {
-    const char* fileName; //
-    const char* region;
-    int column;
+    const char* str;
+    Column column;
 } AppParams;
 
 void doOperation(Operation operation, AppContext* context, AppParams* params);

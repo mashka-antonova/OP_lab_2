@@ -14,10 +14,14 @@ typedef enum {
     ERR_INVALID_COLUMN,
 } Status;
 
+typedef struct FileStats {
+    int totalRows;
+    int errorRows;
+} FileStats;
+
 typedef struct AppContext {
     LinkedList* list;
-    int totalRows; //
-    int errorRows;
+    FileStats stats;
     Status programmStatus;
     Metrix metrix;
 } AppContext;

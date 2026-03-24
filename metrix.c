@@ -5,27 +5,33 @@
 #include "appcontext.h"
 #include "demography.h"
 
-double getValueByColumn(DemographicRecord* record, int column) { //
+double getValueByColumn(DemographicRecord* record, Column column) {
   double value = 0;
   switch (column) {
-    case 1: value = record->year;
+    case COL_YEAR:
+      value = record->year;
       break;
-    case 3: value = record->natural_population_growth;
+    case COL_NPG:
+      value = record->natural_population_growth;
       break;
-    case 4: value = record->birth_rate;
+    case COL_BIRTH_RATE:
+      value = record->birth_rate;
       break;
-    case 5: value = record->death_rate;
+    case COL_DEATH_RATE:
+      value = record->death_rate;
       break;
-    case 6: value = record->general_demographic_weight;
+    case COL_GDW:
+      value = record->general_demographic_weight;
       break;
-    case 7: value = record->urbanization;
+    case COL_URBANIZATION:
+      value = record->urbanization;
       break;
-
-    default: value = 0;
+    default:
       break;
   }
   return value;
 }
+
 
 int compareDoubles(const void* a, const void* b) {
     double d1 = *(const double*)a;
@@ -47,7 +53,7 @@ int countRegionRecords(Iterator* it, const char* region) {
   return count;
 }
 
-double* getSortedColumnValues(Iterator* startIt, int count, int column) { //
+double* getSortedColumnValues(Iterator* startIt, int count, Column column) {
   double* values = (double*)malloc(count * sizeof(double));
   if (values != NULL) {
     for (int i = 0; i < count; i++) {
@@ -59,18 +65,19 @@ double* getSortedColumnValues(Iterator* startIt, int count, int column) { //
   return values;
 }
 
-int checkColumn(AppContext* context, int column) {
+int checkColumn(AppContext* context, Column column) {
   int isCorrect = 1;
-  if (column < 1 || column > 7 || column == 2) {
+  if (column < COL_YEAR || column > COL_URBANIZATION || column == COL_REGION) {
     context->programmStatus = ERR_INVALID_COLUMN;
     isCorrect = 0;
   }
   return isCorrect;
 }
 
-Metrix calculateMetrix(AppContext* context, const char* region, int column) {
+Metrix calculateMetrix(AppContext* context, const char* region, Column column) {
   Metrix metrix = {0, 0, 0, 0};
-  if (context != NULL && context->list != NULL && context->list->head != NULL && region != NULL && checkColumn(context, column)) {
+  if (context != NULL && context->list != NULL && context->list->head != NULL
+      && region != NULL && checkColumn(context, column)) {
 
     Iterator it = begin(context->list);
     startRegionIterator(&it, region);
@@ -86,8 +93,9 @@ Metrix calculateMetrix(AppContext* context, const char* region, int column) {
         metrix.count = count;
         free(values);
       }
-    } else
+    } else {
         context->programmStatus = ERR_INVALID_REGION;
     }
+  }
   return metrix;
 }
