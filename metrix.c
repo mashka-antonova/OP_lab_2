@@ -5,6 +5,8 @@
 #include "appcontext.h"
 #include "demography.h"
 
+#define INIT_CAPACITY 10
+
 double getValueByColumn(DemographicRecord* record, Column column) {
   double value = 0;
   switch (column) {
@@ -32,39 +34,6 @@ double getValueByColumn(DemographicRecord* record, Column column) {
   return value;
 }
 
-
-int compareDoubles(const void* a, const void* b) {
-    double d1 = *(const double*)a;
-    double d2 = *(const double*)b;
-    return (d1 > d2) - (d1 < d2);
-}
-
-void startRegionIterator(Iterator* it, const char* region) {
-  while (hasNext(it) && strcmp(((DemographicRecord*)get(it))->region, region) < 0)
-    next(it);
-}
-
-int countRegionRecords(Iterator* it, const char* region) {
-  int count = 0;
-  while (hasNext(it) && strcmp(((DemographicRecord*)get(it))->region, region) == 0) {
-    count++;
-    next(it);
-  }
-  return count;
-}
-
-double* getSortedColumnValues(Iterator* startIt, int count, Column column) {
-  double* values = (double*)malloc(count * sizeof(double));
-  if (values != NULL) {
-    for (int i = 0; i < count; i++) {
-      values[i] = getValueByColumn((DemographicRecord*)get(startIt), column);
-      next(startIt);
-    }
-    qsort(values, count, sizeof(double), compareDoubles);
-  }
-  return values;
-}
-
 int checkColumn(AppContext* context, Column column) {
   int isCorrect = 1;
   if (column < COL_YEAR || column > COL_URBANIZATION || column == COL_REGION) {
@@ -74,28 +43,57 @@ int checkColumn(AppContext* context, Column column) {
   return isCorrect;
 }
 
-Metrix calculateMetrix(AppContext* context, const char* region, Column column) {
-  Metrix metrix = {0, 0, 0, 0};
-  if (context != NULL && context->list != NULL && context->list->head != NULL
-      && region != NULL && checkColumn(context, column)) {
+void updateMinMax(Metrix* metrix, double val) {
+  if (metrix->count == 0 || val < metrix->min)
+    metrix->min = val;
+  if (metrix->count == 0 || val > metrix->max)
+    metrix->max = val;
+}
 
-    Iterator it = begin(context->list);
-    startRegionIterator(&it, region);
-    Iterator startIt = it;
-    int count = countRegionRecords(&it, region);
 
-    if (count > 0) {
-      double* values = getSortedColumnValues(&startIt, count, column);
-      if (values != NULL) {
-        metrix.min = values[0];
-        metrix.max = values[count - 1];
-        metrix.mediana = (count % 2 != 0) ? values[count / 2] : (values[count / 2 - 1] + values[count / 2]) / 2.0;
-        metrix.count = count;
-        free(values);
-      }
-    } else {
-        context->programmStatus = ERR_INVALID_REGION;
-    }
+double* collectData(AppContext* ctx, const char* region, Column col, int* n, Metrix* metrix) {
+  int cap = INIT_CAPACITY;
+  double* values = (double*)malloc(cap * sizeof(double));
+  Iterator it = begin(ctx->list);
+  while (values && hasNext(&it)) {
+    DemographicRecord* record = (DemographicRecord*)get(&it);
+    int cmp = strcmp(record->region, region);
+    if (cmp == 0) {
+      if (*n >= cap && !(values = (double*)realloc(values, (cap *= 2) * sizeof(double))))
+        break;
+      values[(*n)++] = getValueByColumn(record, col);
+      updateMinMax(metrix, values[*n - 1]);
+      metrix->count = *n;
+    } else if (cmp > 0)
+        break;
+    next(&it);
   }
+  return values;
+}
+
+int compareDoubles(const void* a, const void* b) {
+  double d1 = *(const double*)a;
+  double d2 = *(const double*)b;
+  return (d1 > d2) - (d1 < d2);
+}
+
+Metrix calculateMetrix(AppContext* context, const char* region, Column column) {
+  Metrix metrix = {0};
+  int count = 0;
+  double* vals = NULL;
+
+  if (context && context->list && context->list->head && region && checkColumn(context, column)) {
+    vals = collectData(context, region, column, &count, &metrix);
+    if (count > 0 && vals) {
+      qsort(vals, count, sizeof(double), compareDoubles);
+      metrix.mediana = (count % 2 != 0) ? vals[count / 2] : (vals[count / 2 - 1] + vals[count / 2]) / 2.0;
+    }
+    else if (!vals)
+      context->programmStatus = ERR_MALLOC_FAILED;
+    else
+      context->programmStatus = ERR_INVALID_REGION;
+    free(vals);
+  }
+
   return metrix;
 }
