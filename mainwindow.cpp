@@ -190,7 +190,7 @@ void MainWindow::regionInputEditingFinished()
         doOperation(CALCULATE_METRICS, &context, &params);
         showError();
 
-        if (context.metrix.count > 0) {
+        if (context.programmStatus == STATUS_OK) {
             ui->minimum->setText(QString::number(context.metrix.min));
             ui->maximum->setText(QString::number(context.metrix.max));
             ui->mediana->setText(QString::number(context.metrix.mediana));

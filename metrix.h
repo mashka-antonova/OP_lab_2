@@ -9,7 +9,6 @@ typedef struct {
     double min;
     double max;
     double mediana;
-    int count; //
 } Metrix;
 
 Metrix calculateMetrix(AppContext* context, const char* region, Column columnIndex);

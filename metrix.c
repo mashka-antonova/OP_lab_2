@@ -43,10 +43,10 @@ int checkColumn(AppContext* context, Column column) {
   return isCorrect;
 }
 
-void updateMinMax(Metrix* metrix, double val) {
-  if (metrix->count == 0 || val < metrix->min)
+void updateMinMax(Metrix* metrix, double val, int n) {
+  if (n == 0 || val < metrix->min)
     metrix->min = val;
-  if (metrix->count == 0 || val > metrix->max)
+  if (n == 0 || val > metrix->max)
     metrix->max = val;
 }
 
@@ -62,8 +62,7 @@ double* collectData(AppContext* ctx, const char* region, Column col, int* n, Met
       if (*n >= cap && !(values = (double*)realloc(values, (cap *= 2) * sizeof(double))))
         break;
       values[(*n)++] = getValueByColumn(record, col);
-      updateMinMax(metrix, values[*n - 1]);
-      metrix->count = *n;
+      updateMinMax(metrix, values[*n - 1], *n);
     } else if (cmp > 0)
         break;
     next(&it);
