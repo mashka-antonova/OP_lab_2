@@ -27,5 +27,6 @@ void runLoadDataTask(AppContext* context, const char* fileName) {
 }
 
 void runCalculateMetricsTask(AppContext* context, const char* region, int column) {
+  context->programmStatus = STATUS_OK;
   context->metrix = calculateMetrix(context, region, column);
 }

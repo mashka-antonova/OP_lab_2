@@ -59,9 +59,18 @@ double* getSortedColumnValues(Iterator* startIt, int count, int column) {
   return values;
 }
 
+int checkColumn(AppContext* context, int column) {
+  int isCorrect = 1;
+  if (column < 1 || column > 7 || column == 2) {
+    context->programmStatus = ERR_INVALID_COLUMN;
+    isCorrect = 0;
+  }
+  return isCorrect;
+}
+
 Metrix calculateMetrix(AppContext* context, const char* region, int column) {
   Metrix metrix = {0, 0, 0, 0};
-  if (context != NULL && context->list != NULL && context->list->head != NULL && region != NULL) {
+  if (context != NULL && context->list != NULL && context->list->head != NULL && region != NULL && checkColumn(context, column)) {
 
     Iterator it = begin(context->list);
     startRegionIterator(&it, region);
