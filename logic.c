@@ -16,7 +16,7 @@ void runLoadDataTask(AppContext* context, const char* fileName) {
   if (context->list != NULL)
     clearList(context->list);
 
-  *context = (AppContext){.list = initLinkedList(sizeof(DemographicRecord))};
+  context = (AppContext){.list = initLinkedList(sizeof(DemographicRecord))}; ..
 
   if (!loadDemographyData(context, fileName))
     context->programmStatus = ERR_FILE_OPEN;

@@ -53,26 +53,29 @@ void updateMinMax(Metrix* metrix, double val, int n) {
 
 double* collectData(AppContext* ctx, const char* region, Column col, int* n, Metrix* metrix) {
   int cap = INIT_CAPACITY;
-  double* values = (double*)malloc(cap * sizeof(double));
+  double* values = (double*)malloc(cap * sizeof(double)); //
+
   Iterator it = begin(ctx->list);
-  while (values && hasNext(&it)) {
+  while (hasNext(&it)) {
     DemographicRecord* record = (DemographicRecord*)get(&it);
     int cmp = strcmp(record->region, region);
     if (cmp == 0) {
       if (*n >= cap) {
-        double* values = (double*)realloc(values, (cap *= 2) * sizeof(double));
-        if (!values)
-          break;
+        cap *= 2;
+        double* temp = (double*)realloc(values, cap * sizeof(double));
+        if (!temp)
+            break;
+        values = temp;
+      }
+      double val = getValueByColumn(record, col);
+      values[*n] = val;
+      updateMinMax(metrix, val, *n);
+      (*n)++;
     }
-    double val = getValueByColumn(record, col);
-    values[*n] = val;
-    updateMinMax(metrix, val, *n);
-    (*n)++;
-    }
+    next(&it);
   }
   return values;
 }
-
 int compareDoubles(const void* a, const void* b) {
   double d1 = *(const double*)a;
   double d2 = *(const double*)b;
