@@ -10,5 +10,9 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
     case CALCULATE_METRICS:
       runCalculateMetricsTask(context, params->str, params->column);
       break;
+
+    case INITIALIZATION:
+      initContext(context);
+      break;
   }
 }

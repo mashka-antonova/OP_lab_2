@@ -15,13 +15,13 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowIcon(QIcon(":/icon/photo.png"));
     this->setWindowTitle("ROBCO: DEMOGRAPHIC MODULE");
 
-    context = {};
-
     connect(ui->selectFile, &QToolButton::clicked, this, &MainWindow::selectFileClicked);
     connect(ui->loadData, &QPushButton::clicked, this, &MainWindow::loadDataClicked);
     connect(ui->calculateMetrix, &QPushButton::clicked, this, &MainWindow::calculateMetricsClicked);
     connect(ui->regionInput, &QLineEdit::editingFinished, this, &MainWindow::regionInputEditingFinished);
     connect(ui->tableWidget, &QTableWidget::itemDoubleClicked, this, &MainWindow::tableItemDoubleClicked);
+
+    doOperation(INITIALIZATION, &context, NULL);
 
     ui->tableWidget->setColumnCount(COLUMN_COUNT);
     ui->tableWidget->setHorizontalHeaderLabels({
@@ -91,8 +91,8 @@ void MainWindow::loadDataClicked()
     if (str.empty())
         ui->outputErrorLabel->setText("File not uploaded");
     else {
-        AppParams params = {.str = cStr};
-
+        AppParams params;
+        params.str = cStr;
         doOperation(LOAD_DATA, &context, &params);
         showError();
         int successRows = context.stats.totalRows - context.stats.errorRows;

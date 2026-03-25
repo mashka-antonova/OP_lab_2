@@ -3,6 +3,18 @@
 #include "demography.h"
 #include <string.h>
 
+void initContext(AppContext* context) {
+  if (context != NULL) {
+    context->list = NULL;
+    context->stats.totalRows = 0;
+    context->stats.errorRows = 0;
+    context->programmStatus = STATUS_OK;
+    context->metrix.min = 0;
+    context->metrix.max = 0;
+    context->metrix.mediana = 0;
+  }
+}
+
 int compareRecords(const void* a, const void* b) {
     const DemographicRecord* recA = (const DemographicRecord*)a;
     const DemographicRecord* recB = (const DemographicRecord*)b;
@@ -15,8 +27,6 @@ int compareRecords(const void* a, const void* b) {
 void runLoadDataTask(AppContext* context, const char* fileName) {
   if (context->list != NULL)
     clearList(context->list);
-
-  context = (AppContext){.list = initLinkedList(sizeof(DemographicRecord))}; ..
 
   if (!loadDemographyData(context, fileName))
     context->programmStatus = ERR_FILE_OPEN;

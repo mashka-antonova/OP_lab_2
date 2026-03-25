@@ -43,62 +43,58 @@ int checkColumn(AppContext* context, Column column) {
   return isCorrect;
 }
 
-void updateMinMax(Metrix* metrix, double val, int n) {
-  if (n == 0 || val < metrix->min)
-    metrix->min = val;
-  if (n == 0 || val > metrix->max)
-    metrix->max = val;
-}
-
-
-double* collectData(AppContext* ctx, const char* region, Column col, int* n, Metrix* metrix) {
-  int cap = INIT_CAPACITY;
-  double* values = (double*)malloc(cap * sizeof(double)); //
-
-  Iterator it = begin(ctx->list);
-  while (hasNext(&it)) {
-    DemographicRecord* record = (DemographicRecord*)get(&it);
-    int cmp = strcmp(record->region, region);
-    if (cmp == 0) {
-      if (*n >= cap) {
-        cap *= 2;
-        double* temp = (double*)realloc(values, cap * sizeof(double));
-        if (!temp)
-            break;
-        values = temp;
-      }
-      double val = getValueByColumn(record, col);
-      values[*n] = val;
-      updateMinMax(metrix, val, *n);
-      (*n)++;
-    }
-    next(&it);
-  }
-  return values;
-}
 int compareDoubles(const void* a, const void* b) {
   double d1 = *(const double*)a;
   double d2 = *(const double*)b;
   return (d1 > d2) - (d1 < d2);
 }
 
+int fillSortedData(LinkedList* sourceList, LinkedList* resList, const char* reg, Column col) {
+  int isCorrect = 1;
+  Iterator it = begin(sourceList);
+  while(hasNext(&it) && isCorrect) {
+    DemographicRecord* record = (DemographicRecord*)get(&it);
+    if (strcmp(reg, record->region) == 0) {
+        double val = getValueByColumn(record, col);
+        if (insertSort(resList, &val, compareDoubles))
+          isCorrect = 0;
+    }
+  }
+  return isCorrect;
+}
+
+void findMetrix(LinkedList* list, Metrix* metrix) {
+  metrix->min = *(double*)list->head->data;
+  metrix->max = *(double*)list->tail->data;
+
+  int mid = list->size / 2;
+  Iterator it = begin(list);
+  for (int i = 0; i < mid; i++)
+    next(&it);
+  if (list->size % 2 != 0)
+    metrix->mediana = *(double*)get(&it);
+  else {
+    double valRight = *(double*)get(&it);
+    double valLeft = *(double*)it.current->prev->data;
+    metrix->mediana = (valLeft + valRight) / 2.0;
+  }
+}
+
 Metrix calculateMetrix(AppContext* context, const char* region, Column column) {
   Metrix metrix = {0};
-  int count = 0;
-  double* vals = NULL;
+  LinkedList* tempList = NULL;
+  if (context != NULL && context->list != NULL && region != NULL && checkColumn(context, column)) {
+    tempList = initLinkedList(sizeof(double));
+    if (fillSortedData(context->list, tempList, region, column)) {
+      if (tempList->size > 0) {
+        findMetrix(tempList, &metrix);
+        context->programmStatus = STATUS_OK;
+      } else
+          context->programmStatus = ERR_INVALID_REGION;
 
-  if (context && context->list && context->list->head && region && checkColumn(context, column)) {
-    vals = collectData(context, region, column, &count, &metrix);
-    if (count > 0 && vals) {
-      qsort(vals, count, sizeof(double), compareDoubles);
-      metrix.mediana = (count % 2 != 0) ? vals[count / 2] : (vals[count / 2 - 1] + vals[count / 2]) / 2.0;
-    }
-    else if (!vals)
-      context->programmStatus = ERR_MALLOC_FAILED;
-    else
-      context->programmStatus = ERR_INVALID_REGION;
-    free(vals);
+    } else
+        context->programmStatus = ERR_MALLOC_FAILED;
+    disposeList(tempList);
   }
-
   return metrix;
 }

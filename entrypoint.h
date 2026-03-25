@@ -6,7 +6,8 @@
 
 typedef enum {
     LOAD_DATA,
-    CALCULATE_METRICS
+    CALCULATE_METRICS,
+    INITIALIZATION,
 } Operation;
 
 typedef struct {
