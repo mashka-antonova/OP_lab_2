@@ -27,6 +27,11 @@ int compareRecords(const void* a, const void* b) {
 void runLoadDataTask(AppContext* context, const char* fileName) {
   if (context->list != NULL)
     clearList(context->list);
+  else
+    context->list = initLinkedList(sizeof(DemographicRecord));
+
+  context->stats.totalRows = 0;
+  context->stats.errorRows = 0;
 
   if (!loadDemographyData(context, fileName))
     context->programmStatus = ERR_FILE_OPEN;

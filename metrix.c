@@ -56,9 +56,10 @@ int fillSortedData(LinkedList* sourceList, LinkedList* resList, const char* reg,
     DemographicRecord* record = (DemographicRecord*)get(&it);
     if (strcmp(reg, record->region) == 0) {
         double val = getValueByColumn(record, col);
-        if (insertSort(resList, &val, compareDoubles))
+        if (!insertSort(resList, &val, compareDoubles))
           isCorrect = 0;
     }
+    next(&it);
   }
   return isCorrect;
 }
